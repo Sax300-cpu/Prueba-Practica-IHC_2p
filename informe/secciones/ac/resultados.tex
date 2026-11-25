@@ -1,3 +1,27 @@
-% Edita SOLO este archivo. Borra la linea \pendiente al escribir tu parte.
-% Guia: evaluacion/plan.md, heuristicas.md, recorrido-cognitivo.md, accesibilidad.md, validacion-v2.md (issue #5).
-\pendiente{Ariel Cholota}{plan de evaluación, tareas T1--T3, heurística de Nielsen, recorrido cognitivo, accesibilidad, P00 y validación v2}
+% Sección de Ariel Cholota. Fuente: evaluacion/ (tareas, heuristicas, recorrido-cognitivo, accesibilidad, metricas, validacion-v2) y evidencias/
+\newcommand{\parantesdespues}[3]{%
+  \begin{figure}[H]\centering
+    \begin{minipage}[t]{0.3\textwidth}\centering
+      \includegraphics[height=6.2cm,keepaspectratio]{#1-v1.jpg}\\[2pt]\small Antes (v1)
+    \end{minipage}\hspace{1cm}
+    \begin{minipage}[t]{0.3\textwidth}\centering
+      \includegraphics[height=6.2cm,keepaspectratio]{#1-v2.jpg}\\[2pt]\small Después (v2)
+    \end{minipage}
+    \caption{#2: #3}
+  \end{figure}}
+
+\paragraph{Planificación de la evaluación.} Se definieron tres tareas críticas con consigna sin pistas, estado inicial, tiempo meta y máximo, y criterio de éxito observable (\path{evaluacion/tareas.md}): \textbf{T1} buscar un café americano sin preocuparse por tildes y agregarlo (45 s de meta, 90 s máximo); \textbf{T2} cambiar la cantidad a dos unidades y verificar el total (45 s y 90 s); \textbf{T3} quitar el producto, recuperarlo con deshacer y confirmar el pedido (60 s y 120 s). Cada tarea se acompaña de la pregunta SEQ de 1 a 7 y, al final, del cuestionario SUS. Se dispone además de plan de evaluación, consentimiento informado y hoja de observación (\path{evaluacion/}).
+
+\paragraph{Evaluación heurística.} Se aplicaron las diez heurísticas de Nielsen y se consolidaron nueve hallazgos con severidad de 0 a 4 (H-01 a H-09, tabla de la sección de Kevin Velasco). Los dos de mayor severidad (3) son el aviso de agregado poco perceptible (H-01) y la búsqueda vacía sin salida (H-02).
+
+\paragraph{Recorrido cognitivo.} Se analizaron las tareas T2 y T3 (\path{evaluacion/recorrido-cognitivo.md}). En T2 el control de cantidad es identificable y da retroalimentación inmediata del subtotal y el total. En T3 la secuencia quitar, deshacer y confirmar es comprensible, y la reposición conserva la cantidad exacta.
+
+\paragraph{Accesibilidad.} Se comprobaron teclado, contraste, etiquetas y mensajes de error (\path{evaluacion/accesibilidad.md}). El flujo completo se opera con Tab, Enter y Espacio, el foco se traslada al título al cambiar de vista y los avisos se anuncian en una región de estado. Los contrastes calculados a partir de \path{src/presentation/estilos.css} son: texto principal sobre fondo 13,0:1, texto atenuado sobre fondo 5,0:1, botón rojo con texto blanco 5,4:1 y texto blanco sobre el aviso verde 4,35:1, este último ligeramente por debajo del umbral de 4,5:1 para texto normal y por mejorar.
+
+\paragraph{Pruebas con usuarios y validación de la v2.} Los resultados de P00, P01 y P02 se consolidan en \path{evaluacion/metricas.md}, resumidos en la sección de Kevin Velasco y con la misma limitación: muestra de tres participantes, cifras descriptivas. La validación de la v2 (\path{evaluacion/validacion-v2.md}) se respalda con capturas antes y después de cinco hallazgos corregidos, tomadas con el mismo recorrido en la v1 y en la v2, y con las cinco pruebas automatizadas.
+
+\parantesdespues{h01}{H-01}{tras agregar un producto la tarjeta indica «1 en tu pedido» y el menú muestra el total.}
+\parantesdespues{h02}{H-02}{la búsqueda sin resultados nombra el filtro activo y ofrece «Limpiar búsqueda y filtros».}
+\parantesdespues{h03}{H-03}{tras confirmar y volver al menú se conserva el botón «Último pedido».}
+\parantesdespues{h05}{H-05}{la confirmación añade «Copiar código» y la instrucción de retiro.}
+\parantesdespues{h08}{H-08}{tras quitar un producto aparece «Deshacer eliminación».}

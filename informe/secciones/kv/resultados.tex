@@ -1,11 +1,13 @@
-% Sección de Kevin Velasco. Fuente: docs/analisis-ux.md
+% Sección de Kevin Velasco. Fuente: docs/analisis-ux.md, evaluacion/metricas.md y el historial del repositorio.
+\paragraph{Organización del repositorio.} Se creó el repositorio \url{https://github.com/Sax300-cpu/Prueba-Practica-IHC_2p} con la estructura exigida (\path{docs/}, \path{prototipos/}, \path{src/}, \path{tests/}, \path{evaluacion/}, \path{evidencias/}), la rama de trabajo \texttt{develop} como rama por defecto y una rama por integrante con pull requests revisados por un compañero. Se abrieron cuatro issues, uno por integrante, con sus entregables, y se importó la versión v1 de la aplicación desde el repositorio de la materia.
+
 \paragraph{Persona usuaria.} Daniela, 20 años, estudiante de 5.º semestre de la UTA. Usa el celular a una mano, en pasillos y patio con luz solar fuerte, durante un receso de 15 a 20 minutos. Su meta es pedir un café y algo de comer sin hacer fila y retirarlo rápido. Su perfil coincide con el de los participantes observados (estudiantes UTA ajenos al diseño y mayores de edad).
 
 \paragraph{Touchpoints.} Se identificaron siete: (1) descubrir la app, (2) pantalla de inicio con el horario, (3) menú con catálogo y búsqueda, (4) agregar al pedido, (5) Mi pedido con cantidades y quitar, (6) confirmación y código de retiro, y (7) retiro en caja.
 
 \paragraph{Momentos de verdad.} \textbf{MdV-1:} agregar un producto, porque si la persona duda repite el toque o abandona; dos de tres participantes no percibieron el aviso (H-01). \textbf{MdV-2:} confirmar el pedido y recibir el código, cierre de la tarea con riesgos en H-03, H-04 y H-05.
 
-\paragraph{Curva emocional.} En una escala de 1 a 5, la emoción parte en 4 (curiosidad), baja a 3 en inicio y menú, toca su punto más bajo en 2 al agregar un producto (touchpoint 4, coincide con MdV-1), sube a 3 al revisar el pedido, a 4 al recibir el código y llega a 5 al retirar sin fila. Es una curva cualitativa construida con comentarios en voz alta de tres participantes de la evaluación previa.
+\paragraph{Curva emocional.} En una escala de 1 a 5, la emoción parte en 4 (curiosidad), baja a 3 en inicio y menú, toca su punto más bajo en 2 al agregar un producto (touchpoint 4, coincide con MdV-1), sube a 3 al revisar el pedido, a 4 al recibir el código y llega a 5 al retirar sin fila. Es una curva cualitativa construida con comentarios en voz alta de tres participantes de la evaluación previa de la materia.
 
 \paragraph{Matriz de problemas, Nielsen y Gestalt.}
 \begin{longtable}{|l|p{3.6cm}|p{3.2cm}|p{3cm}|c|}
@@ -22,6 +24,6 @@ H-08 & El ítem del pedido no es tocable & N4 Consistencia y estándares & Simil
 H-09 & El total no se ve desde el menú & N6 Reconocer antes que recordar & Proximidad y región común & 1 \\ \hline
 \end{longtable}
 
-Los problemas de severidad 3 (H-01 y H-02) caen en el momento de verdad MdV-1 y en la búsqueda, donde la persona decide si continúa. Los hallazgos y severidades provienen de la evaluación previa de la materia (inspección de cuatro evaluadores y pruebas con tres participantes); el análisis completo está en \texttt{docs/analisis-ux.md}.
+Los problemas de severidad 3 (H-01 y H-02) caen en el momento de verdad MdV-1 y en la búsqueda, donde la persona decide si continúa. Los hallazgos y severidades provienen de la evaluación previa de la materia (inspección de cuatro evaluadores y pruebas con tres participantes). El análisis completo está en \path{docs/analisis-ux.md}.
 
-\paragraph{Métricas con usuarios.} \pendiente{Kevin Velasco}{completar con tasas de éxito, tiempos y satisfacción de P00, P01 y P02 cuando existan datos reales (evaluacion/metricas.md).}
+\paragraph{Métricas con usuarios.} Las métricas del equipo (\path{evaluacion/metricas.md}) reportan nueve ejecuciones de las tareas T1 a T3 con tres participantes (P00, P01 y P02): ocho se completaron sin ayuda (88,9\,\%), con medianas de 34 s en T1, 24 s en T2 y 43 s en T3, y un SUS promedio de 80,0 sobre 100. Con \textbf{tres participantes estas cifras son solo descriptivas} y no se generalizan estadísticamente. El consolidado no adjunta las hojas individuales de observación ni identifica el commit evaluado, por lo que su contraste con la evaluación heurística debe leerse con esa limitación.

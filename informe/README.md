@@ -9,12 +9,14 @@ Documento final de la prueba. La portada, objetivos e instrucciones ya están ar
 | Luis Miranda | `secciones/lm/` | `resultados.tex`, `conclusiones.tex`, `recomendaciones.tex` |
 | Ariel Cholota | `secciones/ac/` | `resultados.tex`, `conclusiones.tex`, `recomendaciones.tex` |
 
-## Cómo completar tu parte
-1. Crea tu rama desde `develop` (`feat/<iniciales>-informe`).
-2. Abre tus archivos en `secciones/<iniciales>/`. Hoy tienen una línea roja `\pendiente{...}`: **bórrala** y escribe tu contenido.
-3. Capturas: copia la imagen a `imagenes/` y usa `\begin{figure}[H]\centering\includegraphics[width=0.8\textwidth]{nombre.png}\caption{Descripción}\end{figure}`.
-4. Referencias: agrega tus fuentes a `referencias.bib`.
-5. Compila y abre un PR hacia `develop`.
+## Estado
+El informe está completo y compilado en `Informe_CafeU_2.0.pdf`. Los textos de Luis y Ariel se redactaron a partir de sus documentos del repositorio: cada uno debe leer su sección y corregirla si algo no refleja su trabajo.
+
+## Cómo editar
+1. Trabajamos en la rama compartida `docs/informe`: `git checkout docs/informe` y `git pull --rebase origin docs/informe`.
+2. Edita solo tu carpeta `secciones/<iniciales>/`.
+3. Capturas: copia la imagen a `imagenes/` y usa `\includegraphics`.
+4. Recompila (`latexmk -pdf main.tex` dentro de `informe/`), copia `main.pdf` a `Informe_CafeU_2.0.pdf` y sube.
 
 ## Reglas de contenido
 - Usa solo datos reales del repositorio. No inventes resultados de pruebas con usuarios.
