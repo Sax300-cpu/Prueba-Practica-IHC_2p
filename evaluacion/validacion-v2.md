@@ -9,10 +9,10 @@ A partir de la triangulación entre la evaluación heurística (`H-01`–`H-09`)
 
 | ID Hallazgo | Problema en v1 | Solución Implementada en v2 | Evidencia Visual (`evidencias/`) |
 | :---: | :--- | :--- | :--- |
-| **H-01** | Aviso de producto agregado efímero y poco visible. | Banner persistente de alto contraste en región `aria-live` + badge de cantidad en la tarjeta del menú. | `evidencias/antes/h01-v1.png` vs `evidencias/despues/h01-v2.png` |
-| **H-02** | Búsqueda sin resultados sin opción de restablecimiento. | Estado vacío con botón explícito **«Limpiar búsqueda y filtros»** que restablece la categoría *Todas*. | `evidencias/antes/h02-v1.png` vs `evidencias/despues/h02-v2.png` |
-| **H-03 / H-05** | Pérdida del código de retiro al salir de confirmación y falta de copiado. | Botón **«Copiar código»** en `#CU-104` y acceso directo **«Último pedido»** en el menú. | `evidencias/antes/h03-v1.png` vs `evidencias/despues/h03-v2.png` |
-| **H-08 / RF-05** | Eliminación irreversible sin opción de recuperación. | Implementación de acción **«Deshacer»** tras pulsar *Quitar*, reponiendo producto y cantidad exacta. | `evidencias/antes/h08-v1.png` vs `evidencias/despues/h08-v2.png` |
+| **H-01** | Aviso de producto agregado efímero y poco visible. | Banner persistente de alto contraste en región `aria-live` + badge de cantidad en la tarjeta del menú. | `evidencias/antes/h01-v1.jpg` vs `evidencias/despues/h01-v2.jpg` |
+| **H-02** | Búsqueda sin resultados sin opción de restablecimiento. | Estado vacío con botón explícito **«Limpiar búsqueda y filtros»** que restablece la categoría *Todas*. | `evidencias/antes/h02-v1.jpg` vs `evidencias/despues/h02-v2.jpg` |
+| **H-03 / H-05** | Pérdida del código de retiro al salir de confirmación y falta de copiado. | Botón **«Copiar código»** en `#CU-104` y acceso directo **«Último pedido»** en el menú. | `evidencias/antes/h03-v1.jpg` vs `evidencias/despues/h03-v2.jpg` |
+| **H-08 / RF-05** | Eliminación irreversible sin opción de recuperación. | Implementación de acción **«Deshacer»** tras pulsar *Quitar*, reponiendo producto y cantidad exacta. | `evidencias/antes/h08-v1.jpg` vs `evidencias/despues/h08-v2.jpg` |
 
 ---
 
