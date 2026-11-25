@@ -8,14 +8,14 @@
 
 1. **H1 – Visibilidad del estado del sistema:** El cálculo de subtotales es inmediato, pero el aviso flotante de confirmación al agregar productos resulta efímero y pasa desapercibido en pantallas móviles.
 2. **H2 – Relación entre el sistema y el mundo real:** Terminología familiar del campus (*Catálogo*, *Mi pedido*, *Retiro en cafetería*) y precios claros en USD (`$1.50`, `$3.75`). El contador superior carece de etiqueta textual explícita (`artículos`).
-3. **H3 – Control y libertad del usuario:** Existe navegación de retorno (`<`) y opción de cancelar borrador, pero salir de la pantalla de confirmación borra el acceso inmediato al código si no se persiste en sesión.
-4. **H4 – Consistencia y estándares:** Barra inferior estable (*Inicio*, *Menú*, *Pedido*), aunque las tarjetas del menú son completamente clicables mientras que las filas de *Mi pedido* solo permiten interacción en botones puntuales.
+3. **H3 – Control y libertad del usuario:** Existen los botones «Volver al menú» y «Seguir comprando» y la opción de cancelar el borrador, pero salir de la pantalla de confirmación borra el acceso inmediato al código si no se persiste en sesión.
+4. **H4 – Consistencia y estándares:** Cabecera estable con acceso a *Inicio* y *Mi pedido*, aunque las tarjetas del menú son completamente clicables mientras que las filas de *Mi pedido* solo permiten interacción en botones puntuales.
 5. **H5 – Prevención de errores:** El botón *Confirmar pedido* se bloquea cuando el carrito está vacío, pero la explicación del motivo del bloqueo está visualmente alejada del botón de acción.
 6. **H6 – Reconocer antes que recordar:** Imágenes, descripciones y precios visibles evitan carga cognitiva. Sin embargo, el total acumulado no es visible mientras se navega en el menú y el código `#CU-104` no tiene botón de copiado rápido.
 7. **H7 – Flexibilidad y eficiencia de uso:** El buscador integrado agiliza la selección de productos para usuarios frecuentes mediante filtrado instantáneo sin sensibilidad a mayúsculas o tildes.
 8. **H8 – Diseño estético y minimalista:** Interfaz limpia orientada a *Mobile-First* con jerarquía clara entre el banner de horario, catálogo y resumen de orden.
 9. **H9 – Ayudar a reconocer, diagnosticar y recuperarse de errores:** En v1, una búsqueda sin coincidencias dejaba un estado vacío sin acción directa para limpiar filtros y recuperar el catálogo.
-10. **H10 – Ayuda y documentación:** Flujo autodescriptivo con microcopys de apoyo (*«Presenta este número al recoger»*, *«Listo en aproximadamente 12 minutos»*).
+10. **H10 – Ayuda y documentación:** Flujo autodescriptivo con microcopys de apoyo (*«Presenta este código en caja para retirar en cafetería»*, *«Agrega al menos un producto para confirmar tu pedido»*).
 
 ---
 

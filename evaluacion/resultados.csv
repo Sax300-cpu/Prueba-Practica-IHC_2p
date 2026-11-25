@@ -1,0 +1,10 @@
+﻿tarea,participante,resultado,tiempo_s,errores_criticos,errores_no_criticos,seq_1_7,observacion
+T1,P00,Sí,34,0,0,6,Validó claridad de consigna y búsqueda sin tilde (CAFE).
+T1,P01,Sí,29,0,0,7,Flujo directo desde inicio al menú y detalle.
+T1,P02,Con ayuda,54,0,1,5,Tenía filtro Comida activo; requirió pista única para limpiar filtro (H-02).
+T2,P00,Sí,21,0,0,7,Incrementó a 2 cafés y verificó $3.00 sin dudas.
+T2,P01,Sí,26,0,1,6,"Inicialmente tocó la tarjeta (H-08), luego usó + con éxito."
+T2,P02,Sí,24,0,0,7,Control + y bloqueo de - en 1 unidad claros.
+T3,P00,Sí,43,0,0,6,"Probó Quitar, recuperó con Deshacer y obtuvo #CU-104."
+T3,P01,Sí,39,0,0,7,Recuperación inmediata y confirmación fluida.
+T3,P02,Sí,47,0,0,6,Destacó la utilidad de Deshacer y el código visible.
