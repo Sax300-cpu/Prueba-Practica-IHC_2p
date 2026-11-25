@@ -15,6 +15,8 @@ const pedidoUseCase = new GestionarPedidoUseCase(pedidoRepo, catalogoRepo);
 let categoriaActual = 'todas';
 let productoDetalle = null;
 let ultimaConfirmacion = null;
+let ultimoEliminado = null;
+const nombresCategoria = { todas: 'Todas', bebidas: 'Bebidas', comida: 'Comida' };
 
 // ---------- Referencias DOM ----------
 const $ = (sel) => document.querySelector(sel);
@@ -52,6 +54,13 @@ function mostrarVista(nombre) {
       vistas[key].hidden = key !== nombre;
     }
   }
+  const vistaActiva = vistas[nombre];
+  const idTitulo = vistaActiva?.getAttribute('aria-labelledby');
+  const titulo = idTitulo ? document.getElementById(idTitulo) : null;
+  if (titulo) {
+    titulo.tabIndex = -1;
+    titulo.focus({ preventScroll: true });
+  }
   window.scrollTo(0, 0);
 }
 
@@ -69,9 +78,20 @@ function renderCatalogo() {
     categoria: categoriaActual,
   });
 
+  const estadoPedido = pedidoUseCase.obtenerEstado();
+  const cantidadesPorId = new Map(estadoPedido.items.map((item) => [item.id, item.cantidad]));
+
   catalogo.innerHTML = '';
   if (lista.length === 0) {
-    catalogo.innerHTML = '<li class="pedido-vacio">No hay productos que coincidan.</li>';
+    catalogo.innerHTML = `<li class="pedido-vacio">
+      <p>No hay coincidencias en «${nombresCategoria[categoriaActual] || categoriaActual}».</p>
+      <button type="button" class="boton secundario" id="limpiar-busqueda">Limpiar búsqueda y filtros</button>
+    </li>`;
+    $('#limpiar-busqueda')?.addEventListener('click', () => {
+      if (buscador) buscador.value = '';
+      seleccionarCategoria('todas');
+      buscador?.focus();
+    });
     return;
   }
 
@@ -80,13 +100,14 @@ function renderCatalogo() {
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.className = 'cat';
-    btn.setAttribute('aria-label', `Ver detalle de ${p.nombre}`);
+    const cantidad = cantidadesPorId.get(p.id) || 0;
     btn.innerHTML =
       `<span class="emoji" aria-hidden="true">${p.emoji}</span>` +
       `<span class="info">` +
         `<span class="categoria">${p.categoria}</span><br>` +
         `<span class="nombre">${p.nombre}</span><br>` +
         `<span class="desc">${p.desc}</span>` +
+        (cantidad ? `<br><strong>${cantidad} en tu pedido</strong>` : '') +
       `</span>` +
       `<span class="precio">${fmt(p.precio)}</span>`;
     btn.addEventListener('click', () => abrirDetalle(p.id));
@@ -103,7 +124,7 @@ function abrirDetalle(id) {
   const cont = $('#detalle-contenido');
   cont.innerHTML =
     `<div class="emoji" aria-hidden="true">${productoDetalle.emoji}</div>` +
-    `<h2>${productoDetalle.nombre}</h2>` +
+    `<h1 id="titulo-detalle">${productoDetalle.nombre}</h1>` +
     `<p class="desc">${productoDetalle.desc}</p>` +
     `<p class="precio">${fmt(productoDetalle.precio)}</p>` +
     `<div class="selector-cantidad">` +
@@ -125,7 +146,9 @@ function abrirDetalle(id) {
   });
   $('#btn-agregar').addEventListener('click', () => {
     pedidoUseCase.agregarProducto(productoDetalle.id, cant);
+    ultimoEliminado = null;
     actualizarContador();
+    renderCatalogo();
     renderPedido();
     mostrarVista('menu');
     mostrarAviso(`${productoDetalle.nombre} agregado al pedido.`);
@@ -171,6 +194,13 @@ function renderPedido() {
     }
   }
 
+  if (ultimoEliminado || estado.puedeRecuperar) {
+    html += '<button type="button" class="boton secundario" id="btn-deshacer">Deshacer eliminación</button>';
+  }
+  if (!vacio) {
+    html += '<button type="button" class="boton secundario" id="btn-cancelar">Cancelar pedido</button>';
+  }
+
   html +=
     `<dl class="resumen">` +
       `<div class="fila"><dt>Artículos</dt><dd>${estado.totalArticulos}</dd></div>` +
@@ -188,35 +218,99 @@ function renderPedido() {
 
   cont.innerHTML = html;
 
+  $('#btn-deshacer')?.addEventListener('click', () => {
+    const previa = ultimoEliminado;
+    const { estado: nuevoEstado } = pedidoUseCase.recuperarUltimoEliminado();
+    ultimoEliminado = null;
+    actualizarContador();
+    renderCatalogo();
+    renderPedido();
+    if (previa?.id) {
+      enfocarLinea(previa.id);
+    }
+    const itemRestaurado = previa?.id
+      ? nuevoEstado.items.find((x) => x.id === previa.id)
+      : null;
+    mostrarAviso(
+      itemRestaurado
+        ? `Producto recuperado (${itemRestaurado.cantidad}). Total: ${fmt(nuevoEstado.total)}.`
+        : 'Producto recuperado.'
+    );
+  });
+
+  $('#btn-cancelar')?.addEventListener('click', abrirCancelacion);
+
   if (vacio) {
-    $('#btn-vacio-menu').addEventListener('click', () => mostrarVista('menu'));
+    $('#btn-vacio-menu')?.addEventListener('click', () => mostrarVista('menu'));
   } else {
     cont.querySelectorAll('.mini-selector button').forEach((b) => {
       b.addEventListener('click', () => {
         const id = b.dataset.id;
         const delta = parseInt(b.dataset.op, 10);
-        pedidoUseCase.ajustarCantidad(id, delta);
+        const { estado: nuevoEstado } = pedidoUseCase.ajustarCantidad(id, delta);
+        const itemActual = nuevoEstado.items.find((x) => x.id === id);
         actualizarContador();
+        renderCatalogo();
         renderPedido();
+        if (itemActual) {
+          enfocarLinea(id, delta);
+          mostrarAviso(`Cantidad: ${itemActual.cantidad}. Total: ${fmt(nuevoEstado.total)}.`);
+        } else {
+          mostrarAviso(`Producto quitado. Total: ${fmt(nuevoEstado.total)}.`);
+        }
       });
     });
 
     cont.querySelectorAll('.quitar').forEach((b) => {
       b.addEventListener('click', () => {
-        const { eliminado } = pedidoUseCase.eliminarProducto(b.dataset.id);
+        const id = b.dataset.id;
+        const estadoActual = pedidoUseCase.obtenerEstado();
+        const itemPrevio = estadoActual.items.find((x) => x.id === id);
+        if (itemPrevio) {
+          ultimoEliminado = { id: itemPrevio.id, cantidad: itemPrevio.cantidad };
+        }
+        const { eliminado, estado: nuevoEstado } = pedidoUseCase.eliminarProducto(id);
         actualizarContador();
+        renderCatalogo();
         renderPedido();
         if (eliminado) {
-          mostrarAviso(`${eliminado} quitado del pedido.`);
+          mostrarAviso(`${eliminado} quitado. Total: ${fmt(nuevoEstado.total)}.`);
         }
       });
     });
 
-    $('#btn-confirmar').addEventListener('click', confirmarPedido);
+    $('#btn-confirmar')?.addEventListener('click', confirmarPedido);
   }
 
-  $('#btn-seguir').addEventListener('click', () => mostrarVista('menu'));
+  $('#btn-seguir')?.addEventListener('click', () => mostrarVista('menu'));
 }
+
+function enfocarLinea(id, operacion = 1) {
+  const boton = document.querySelector(`[data-id="${id}"][data-op="${operacion}"]:enabled`);
+  (boton || document.querySelector(`[data-id="${id}"][data-op="1"]`))?.focus();
+}
+
+function abrirCancelacion() {
+  const dialogo = $('#cancelacion');
+  dialogo?.showModal?.();
+}
+
+$('#cancelacion form')?.addEventListener('submit', (evento) => {
+  evento.preventDefault();
+  $('#cancelacion')?.close?.();
+  if (evento.submitter?.value !== 'vaciar') return;
+
+  const estadoActual = pedidoUseCase.obtenerEstado();
+  for (const item of estadoActual.items) {
+    pedidoUseCase.eliminarProducto(item.id);
+  }
+  ultimoEliminado = null;
+  actualizarContador();
+  renderCatalogo();
+  renderPedido();
+  $('#btn-vacio-menu')?.focus();
+  mostrarAviso('Pedido cancelado.');
+});
 
 function confirmarPedido() {
   const estadoPrevio = pedidoUseCase.obtenerEstado();
@@ -227,7 +321,9 @@ function confirmarPedido() {
 
   const { confirmacion } = pedidoUseCase.confirmarPedido();
   ultimaConfirmacion = confirmacion;
+  ultimoEliminado = null;
   actualizarContador();
+  renderCatalogo();
   renderPedido();
 
   const cont = $('#confirmacion-contenido');
@@ -254,13 +350,20 @@ function confirmarPedido() {
 }
 
 // ---------- Filtros y búsqueda ----------
+function seleccionarCategoria(categoria) {
+  categoriaActual = categoria;
+  document.querySelectorAll('.filtro').forEach((filtro) => {
+    const activo = filtro.dataset.cat === categoria;
+    filtro.classList.toggle('activo', activo);
+    filtro.setAttribute('aria-pressed', String(activo));
+  });
+  renderCatalogo();
+}
+
 function initFiltros() {
   document.querySelectorAll('.filtro').forEach((f) => {
     f.addEventListener('click', () => {
-      document.querySelectorAll('.filtro').forEach((x) => x.classList.remove('activo'));
-      f.classList.add('activo');
-      categoriaActual = f.dataset.cat;
-      renderCatalogo();
+      seleccionarCategoria(f.dataset.cat);
     });
   });
   if (buscador) {
@@ -270,16 +373,17 @@ function initFiltros() {
 
 // ---------- Navegación ----------
 function initNavegacion() {
-  $('#btn-inicio').addEventListener('click', () => mostrarVista('inicio'));
-  $('#btn-ver-menu').addEventListener('click', () => {
+  $('#btn-ultimo')?.addEventListener('click', () => mostrarVista('confirmacion'));
+  $('#btn-inicio')?.addEventListener('click', () => mostrarVista('inicio'));
+  $('#btn-ver-menu')?.addEventListener('click', () => {
     mostrarVista('menu');
     renderCatalogo();
   });
-  $('#btn-volver-menu').addEventListener('click', () => {
+  $('#btn-volver-menu')?.addEventListener('click', () => {
     mostrarVista('menu');
     renderCatalogo();
   });
-  $('#btn-pedido').addEventListener('click', () => {
+  $('#btn-pedido')?.addEventListener('click', () => {
     renderPedido();
     mostrarVista('pedido');
   });

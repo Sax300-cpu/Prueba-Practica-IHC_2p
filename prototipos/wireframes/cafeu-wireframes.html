@@ -95,7 +95,7 @@
 <body>
   <main>
     <header>
-      <p class="eyebrow">APE 4 · Fase 1 · Caso didáctico</p>
+      <p class="eyebrow">Prueba práctica IHC</p>
       <h1>CaféU: wireframes</h1>
       <p>Flujo para consultar el menú, elegir un producto, revisar el pedido y recibir confirmación. Los bloques en escala de grises priorizan estructura, contenido y acciones.</p>
       <div class="notice"><strong>Prototipo estático de baja fidelidad.</strong> Los controles son representaciones visuales para explicar la propuesta; no tienen navegación ni funcionalidad.</div>
@@ -121,7 +121,7 @@
         <h2 id="screen-menu">2. Menú</h2>
         <div class="screen">
           <div class="topbar"><span>‹ Inicio</span><span>Mi pedido · 1</span></div>
-          <h3 class="heading">Menú de hoy</h3>
+          <h3 class="heading">Menú de hoy</h3><p class="total">Total del pedido: $1.50</p>
           <div class="field">Buscar productos…</div>
           <div class="filter-row"><span class="chip">Todo</span><span class="chip">Bebidas</span><span class="chip">Comida</span></div>
           <div class="item">
@@ -167,7 +167,7 @@
             <p class="muted">Total a pagar en cafetería</p>
           </div>
           <div class="control secondary">Volver al menú</div>
-          <div class="control">Confirmar pedido</div>
+          <div class="control secondary">Cancelar pedido</div><div class="control">Confirmar pedido</div><p class="annotation">Al quitar un producto aparece Deshacer eliminación. Cancelar abre una confirmación para conservar o vaciar.</p>
         </div>
         <p class="annotation">Permite corregir cantidades o quitar productos antes de confirmar.</p>
       </article>
@@ -178,7 +178,7 @@
           <div class="topbar"><span>CaféU</span><span>Pedido recibido</span></div>
           <div class="placeholder avatar"></div>
           <h3 class="heading" style="text-align:center">¡Pedido confirmado!</h3>
-          <p class="muted" style="text-align:center">La cafetería recibió tu pedido.</p>
+          <p class="muted" style="text-align:center">Presenta el código de retiro en caja.</p>
           <div class="status">Número de pedido<br><strong>#CU-104</strong></div>
           <div class="item">
             <h3>Resumen</h3><p>1 × Café americano</p><p>Total · $1.50</p>
@@ -186,11 +186,11 @@
           <p class="muted">Puedes mostrar el número al retirar tu pedido.</p>
           <div class="control secondary">Volver al menú</div>
         </div>
-        <p class="annotation">El estado final confirma que la tarea terminó y resume lo recibido.</p>
+        <p class="annotation">Último pedido permite volver a consultar el código durante la sesión.</p>
       </article>
     </section>
 
-    <footer>Ejemplo ficticio para explicar requisitos → sitemap → user flow → wireframes.</footer>
+    <footer>Wireframes de CaféU 2.0</footer>
   </main>
 </body>
 </html>

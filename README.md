@@ -10,7 +10,7 @@ Integrantes: Kevin Velasco · Manolo García · Luis Miranda · Ariel Cholota
 _Pendiente (LM)._
 
 ## Ejecución
-_Pendiente (LM/MG)._ La v1 se abre con `prototipos/version-v1/index.html`.
+Abre `src/presentation/index.html` en el navegador para usar la interfaz de CaféU. La versión de referencia está en `prototipos/version-v1/index.html`.
 
 ## Pruebas
 _Pendiente (LM): mínimo 3 pruebas automatizadas en `tests/pruebas-automatizadas/`._
@@ -28,11 +28,11 @@ _Pendiente (muestra pequeña de usuarios: métricas solo descriptivas)._
 | Criterio | Evidencia | Responsable |
 |---|---|---|
 | 1 Análisis UX | `docs/analisis-ux.md` | KV |
-| 2 Requisitos y AI | `docs/requisitos.md`, `docs/trazabilidad.md` | MG |
-| 3 Prototipado | `prototipos/` | MG |
+| 2 Requisitos y AI | [Requisitos](docs/requisitos.md), [mapa y flujos](docs/arquitectura-informacion.md), [trazabilidad](docs/trazabilidad.md) | MG |
+| 3 Prototipado | [Wireframes](prototipos/wireframes/cafeu-wireframes.html) | MG |
 | 4 Implementación | `src/`, `tests/` | LM + MG |
 | 5 Planificación y pilotaje | `evaluacion/plan.md`, `evaluacion/piloto.md` | AC |
 | 6 Heurística y accesibilidad | `evaluacion/heuristicas.md`, `recorrido-cognitivo.md`, `accesibilidad.md` | AC |
 | 7 Pruebas con usuarios | `evaluacion/resultados.csv`, `metricas.md` | KV |
-| 8 Hallazgos y validación | `hallazgos.md`, `backlog.md`, `validacion-v2.md` | MG/LM/AC |
+| 8 Hallazgos y validación | [Hallazgos](evaluacion/hallazgos.md), `backlog.md`, `validacion-v2.md` | MG/LM/AC |
 | 9 GitHub y colaboración | este README, historial de commits | todos |
