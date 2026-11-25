@@ -18,16 +18,18 @@ La [matriz consolidada de APE6](https://github.com/Sax300-cpu/HCI-2026-G2/blob/m
 
 | Sesión | Moderación | Observación | Estado |
 |---|---|---|---|
-| P00 | Ariel Cholota | Manolo García | Pendiente de evidencia del piloto |
-| P01 | Kevin Velasco | Manolo García | Pendiente de evidencia |
-| P02 | Luis Miranda | Manolo García | Pendiente de evidencia |
+| P00 | Ariel Cholota | Manolo García | T1–T3 sin ayuda (34, 21 y 43 s). El consolidado reporta que la consigna de T1 fue clara. |
+| P01 | Kevin Velasco | Manolo García | T1–T3 sin ayuda (29, 26 y 39 s). En T2 tocó primero la tarjeta y luego usó el botón «+». |
+| P02 | Luis Miranda | Manolo García | T1 con ayuda (54 s). T2 y T3 sin ayuda (24 y 47 s). |
 
-Completar una [hoja de observación](04_Hoja_Observacion_SUS.md) por sesión con el código del participante y las consignas que se usaron. El [plan del equipo](../docs/plan-equipo.md) define P00 como piloto. Si el equipo confirma la reutilización de P1–P3, registrar la correspondencia con P00–P02 y la versión que se evaluó.
+Fuente de la tabla: [consolidado de métricas del equipo](metricas.md). El [plan del equipo](../docs/plan-equipo.md) define los roles previstos. El consolidado no identifica el commit evaluado, los cambios entre el piloto y las otras sesiones ni las hojas individuales. Las observaciones de esta sección se atribuyen al consolidado.
 
 ### Registro para contrastar las sesiones con la inspección
 
-| Sesión y tarea | Versión o commit | Resultado y tiempo | Acción o frase observada | Hallazgo y relación con la inspección |
-|---|---|---|---|---|
-| _Completar con cada observación registrada_ | | | | |
+| Sesión y tarea | Observación publicada | Relación con la inspección y el historial |
+|---|---|---|
+| P02 · T1 | Con el filtro Comida activo, usó una pista para limpiar los filtros. | **H-02.** Coincide con la [inspección](heuristicas.md) sobre la dificultad de recuperar una búsqueda vacía. La presencia del botón en la interfaz actual es comprobable. Su descubrimiento sin ayuda requiere seguimiento. |
+| P01 · T2 | Tocó la tarjeta antes de usar «+» y terminó sin ayuda. | **H-08.** Reaparece el intento observado en APE6 de editar tocando la línea. El control permitió completar la tarea, aunque no fue su primera elección. |
+| P00–P02 · T3 | Los tres quitaron, recuperaron y confirmaron sin ayuda, según el consolidado. | **RF-05 y RF-06.** Las sesiones respaldan el recorrido de recuperación y confirmación. Volver a abrir la confirmación (**H-03**) y copiar el código (**H-05**) requieren comprobaciones específicas. |
 
-Para cada hallazgo, indicar si la inspección y la sesión coinciden, si la sesión descubre un problema nuevo o si la tarea ejecutada deja el hallazgo sin comprobar. Si una tarea termina con ayuda, conservar ese dato al describir el resultado. Para P00, registrar además los cambios de consigna o del protocolo antes de P01 y P02. Usar códigos de participante en las notas que se publiquen.
+El consolidado registra 8 de 9 ejecuciones sin ayuda, incluido el piloto. En P01 y P02 fueron 5 de 6. Las observaciones publicadas sobre T1–T3 no permiten determinar si se percibió el aviso de agregado (H-01), si el contador se entendió (H-06), si se echó de menos un indicador de pasos (H-07) o si se localizó el total desde el menú (H-09).

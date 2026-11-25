@@ -13,4 +13,4 @@ Los escenarios son criterios de verificación. La numeración de tareas con part
 | RNF-01 | Todas las vistas | Revisar el recorrido en un viewport de 320 px y otro de escritorio. |
 | RNF-02 | Navegación y controles | Completar la compra con teclado, incluido quitar y deshacer. Verificar foco visible y su destino. |
 | RNF-03 | Encabezados, controles, región de estado | Revisar nombres accesibles y anuncios de agregado, cambio y recuperación con tecnología de asistencia. |
-| RNF-04 | Borrador del pedido | Recargar después de cambiar cantidades y comprobar que el borrador reaparece. Verificación pendiente de la integración de la issue #4. |
+| RNF-04 | Borrador del pedido | Verificado en Edge mediante HTTP con la integración de la issue #4. Tras agregar Café americano, cambiar a dos unidades y recargar, el pedido conserva el producto y el total de $3.00. La suite incluye persistencia y recuperación en memoria ante un fallo de escritura. |
