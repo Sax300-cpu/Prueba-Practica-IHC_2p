@@ -10,7 +10,13 @@ Integrantes: Kevin Velasco · Manolo García · Luis Miranda · Ariel Cholota
 _Pendiente (LM)._
 
 ## Ejecución
-Abre `src/presentation/index.html` en el navegador para usar la interfaz de CaféU. La versión de referencia está en `prototipos/version-v1/index.html`.
+Desde la raíz del repositorio, inicia un servidor local, por ejemplo con Python 3:
+
+```sh
+python -m http.server 8000
+```
+
+Abre [CaféU](http://localhost:8000/src/presentation/index.html). Usa HTTP para que el navegador cargue los módulos JavaScript. La versión de referencia está en `prototipos/version-v1/index.html`.
 
 ## Pruebas
 _Pendiente (LM): mínimo 3 pruebas automatizadas en `tests/pruebas-automatizadas/`._
