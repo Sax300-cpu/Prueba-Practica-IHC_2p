@@ -225,7 +225,7 @@ button:focus-visible, input:focus-visible { outline: 3px solid var(--foco); outl
 .marca { border: 0; background: transparent; min-height: 44px; }
 .cabecera { flex-wrap: wrap; gap: .5rem; position: static; }
 .total-menu { margin-block-end: .75rem; }
-.linea-pedido { grid-template-columns: minmax(0, 1fr) auto; }
+.linea-pedido { display: grid; grid-template-columns: minmax(0, 1fr) auto; }
 .linea-pedido .info { overflow-wrap: anywhere; }
 .mini-selector button, .quitar, .boton.texto { min-height: 44px; }
 .mini-selector button { min-width: 44px; }

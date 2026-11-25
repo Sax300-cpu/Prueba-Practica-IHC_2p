@@ -273,12 +273,13 @@ function enfocarLinea(id, operacion = 1) {
 
 function abrirCancelacion() {
   const dialogo = $('#cancelacion');
-  dialogo.returnValue = '';
   dialogo.showModal();
 }
 
-$('#cancelacion').addEventListener('close', (evento) => {
-  if (evento.currentTarget.returnValue !== 'vaciar') return;
+$('#cancelacion form').addEventListener('submit', (evento) => {
+  evento.preventDefault();
+  $('#cancelacion').close();
+  if (evento.submitter?.value !== 'vaciar') return;
   pedido.clear();
   ultimoEliminado = null;
   actualizarContador();
