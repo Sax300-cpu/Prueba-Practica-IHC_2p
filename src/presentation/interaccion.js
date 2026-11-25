@@ -14,7 +14,7 @@ const pedidoUseCase = new GestionarPedidoUseCase(pedidoRepo, catalogoRepo);
 // ---------- Estado de UI ----------
 let categoriaActual = 'todas';
 let productoDetalle = null;
-let ultimaConfirmacion = null;
+let ultimaConfirmacion = pedidoUseCase.obtenerEstado().ultimoConfirmado || null;
 let ultimoEliminado = null;
 const nombresCategoria = { todas: 'Todas', bebidas: 'Bebidas', comida: 'Comida' };
 
@@ -69,6 +69,12 @@ function actualizarContador() {
   if (contador) {
     contador.textContent = estado.totalArticulos;
   }
+  const cantidad = estado.totalArticulos;
+  $('#btn-pedido')?.setAttribute('aria-label', `Mi pedido, ${cantidad} ${cantidad === 1 ? 'artículo' : 'artículos'}`);
+  const totalMenu = $('#total-menu');
+  if (totalMenu) totalMenu.textContent = `Total del pedido: ${fmt(estado.total)}`;
+  const btnUltimo = $('#btn-ultimo');
+  if (btnUltimo) btnUltimo.hidden = !(estado.ultimoConfirmado || ultimaConfirmacion);
 }
 
 // ---------- Render: catálogo ----------
@@ -312,6 +318,52 @@ $('#cancelacion form')?.addEventListener('submit', (evento) => {
   mostrarAviso('Pedido cancelado.');
 });
 
+// ---------- Render: confirmación / último pedido (H-03 y H-05) ----------
+function renderConfirmacion(confirmacion) {
+  const data = confirmacion || ultimaConfirmacion || pedidoUseCase.obtenerEstado().ultimoConfirmado;
+  const cont = $('#confirmacion-contenido');
+  if (!cont) return;
+
+  if (!data) {
+    cont.innerHTML =
+      `<h1 id="titulo-confirmacion">Último pedido</h1>` +
+      `<p>Aún no has confirmado ningún pedido en esta sesión.</p>` +
+      `<button type="button" class="boton primario" id="btn-finalizar">Ir al menú</button>`;
+    $('#btn-finalizar')?.addEventListener('click', () => mostrarVista('menu'));
+    return;
+  }
+
+  const codigoMostrado = data.codigo || CODIGO_PEDIDO_BASE;
+  const itemsHtml = (data.items || [])
+    .map((item) => `<div class="fila"><dt>${item.cantidad} × ${item.nombre}</dt><dd>${fmt(item.subtotal)}</dd></div>`)
+    .join('');
+
+  cont.innerHTML =
+    `<div class="check" aria-hidden="true">✅</div>` +
+    `<h1 id="titulo-confirmacion">¡Pedido recibido!</h1>` +
+    `<p>Presenta este código en caja para retirar en cafetería.</p>` +
+    `<p class="codigo" id="codigo-retiro">${codigoMostrado}</p>` +
+    `<button type="button" class="boton secundario" id="btn-copiar-codigo" aria-label="Copiar código de retiro ${codigoMostrado}">Copiar código</button>` +
+    `<dl class="resumen detalle-pedido">${itemsHtml}` +
+      `<div class="fila total"><dt>Total</dt><dd>${fmt(data.total)}</dd></div>` +
+    `</dl>` +
+    `<button type="button" class="boton primario" id="btn-finalizar">Volver al menú</button>`;
+
+  $('#btn-copiar-codigo')?.addEventListener('click', async () => {
+    try {
+      if (!navigator.clipboard?.writeText) throw new Error('Portapapeles no disponible');
+      await navigator.clipboard.writeText(codigoMostrado);
+      mostrarAviso(`Código ${codigoMostrado} copiado al portapapeles.`);
+    } catch {
+      mostrarAviso(`Código de retiro: ${codigoMostrado}.`);
+    }
+  });
+
+  $('#btn-finalizar')?.addEventListener('click', () => {
+    mostrarVista('menu');
+  });
+}
+
 function confirmarPedido() {
   const estadoPrevio = pedidoUseCase.obtenerEstado();
   if (estadoPrevio.estaVacio) {
@@ -325,27 +377,7 @@ function confirmarPedido() {
   actualizarContador();
   renderCatalogo();
   renderPedido();
-
-  const cont = $('#confirmacion-contenido');
-  const itemsHtml = confirmacion.items
-    .map((item) => `<div class="fila"><dt>${item.cantidad} × ${item.nombre}</dt><dd>${fmt(item.subtotal)}</dd></div>`)
-    .join('');
-
-  cont.innerHTML =
-    `<div class="check" aria-hidden="true">✅</div>` +
-    `<h2>¡Pedido recibido!</h2>` +
-    `<p>Ya está en camino a la cocina de la cafetería.</p>` +
-    `<p class="codigo">${confirmacion.codigo || CODIGO_PEDIDO_BASE}</p>` +
-    `<dl class="resumen detalle-pedido">${itemsHtml}` +
-      `<div class="fila total"><dt>Total</dt><dd>${fmt(confirmacion.total)}</dd></div>` +
-    `</dl>` +
-    `<button type="button" class="boton primario" id="btn-finalizar">Volver al menú</button>`;
-
-  $('#btn-finalizar').addEventListener('click', () => {
-    ultimaConfirmacion = null;
-    mostrarVista('menu');
-  });
-
+  renderConfirmacion(confirmacion);
   mostrarVista('confirmacion');
 }
 
@@ -373,7 +405,10 @@ function initFiltros() {
 
 // ---------- Navegación ----------
 function initNavegacion() {
-  $('#btn-ultimo')?.addEventListener('click', () => mostrarVista('confirmacion'));
+  $('#btn-ultimo')?.addEventListener('click', () => {
+    renderConfirmacion(ultimaConfirmacion);
+    mostrarVista('confirmacion');
+  });
   $('#btn-inicio')?.addEventListener('click', () => mostrarVista('inicio'));
   $('#btn-ver-menu')?.addEventListener('click', () => {
     mostrarVista('menu');
@@ -394,4 +429,5 @@ initFiltros();
 initNavegacion();
 renderCatalogo();
 renderPedido();
+renderConfirmacion(ultimaConfirmacion);
 actualizarContador();
