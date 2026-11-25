@@ -218,3 +218,23 @@ h1 { font-size: 1.5rem; margin-bottom: 1rem; }
   .catalogo { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
   .acciones { flex-direction: row; justify-content: flex-end; }
 }
+
+/* Controles, foco y estados del pedido */
+[hidden] { display: none !important; }
+button:focus-visible, input:focus-visible { outline: 3px solid var(--foco); outline-offset: 2px; }
+.marca { border: 0; background: transparent; min-height: 44px; }
+.cabecera { flex-wrap: wrap; gap: .5rem; position: static; }
+.total-menu { margin-block-end: .75rem; }
+.linea-pedido { grid-template-columns: minmax(0, 1fr) auto; }
+.linea-pedido .info { overflow-wrap: anywhere; }
+.mini-selector button, .quitar, .boton.texto { min-height: 44px; }
+.mini-selector button { min-width: 44px; }
+button:disabled { cursor: not-allowed; opacity: .65; }
+#btn-deshacer, #btn-cancelar { margin: .5rem .5rem .5rem 0; }
+dialog { margin: auto; width: min(28rem, calc(100% - 2rem)); padding: 1rem; border: 1px solid var(--linea); border-radius: 1rem; }
+dialog p { margin-block: .75rem; }
+dialog button { margin-block-end: .5rem; }
+dialog::backdrop { background: #0008; }
+@media (min-width: 38rem) {
+  .linea-pedido { grid-template-columns: minmax(0, 1fr) auto auto auto; }
+}
