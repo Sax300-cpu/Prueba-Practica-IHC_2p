@@ -8,10 +8,11 @@
 </head>
 <body>
   <header class="cabecera">
-    <p class="marca" id="btn-inicio" tabindex="0" role="button" aria-label="Ir al inicio">CaféU <span class="version" aria-hidden="true">V2</span></p>
+    <button type="button" class="marca" id="btn-inicio">CaféU</button>
     <button type="button" class="carrito" id="btn-pedido" aria-label="Ver mi pedido">
-      🛒 <span id="contador" class="contador">0</span>
+      Mi pedido <span id="contador" class="contador">0</span>
     </button>
+    <button type="button" class="boton secundario" id="btn-ultimo" hidden>Último pedido</button>
   </header>
 
   <main>
@@ -35,6 +36,7 @@
     <!-- ============ VISTA: MENÚ ============ -->
     <section id="vista-menu" class="vista" hidden aria-labelledby="titulo-menu">
       <h1 id="titulo-menu">Menú</h1>
+      <p id="total-menu" class="total-menu"></p>
       <label class="buscador">
         <span class="sr-only">Buscar productos</span>
         <input type="search" id="buscador" placeholder="Buscar productos…">
@@ -65,8 +67,17 @@
     </section>
   </main>
 
+  <dialog id="cancelacion" aria-labelledby="titulo-cancelacion">
+    <form method="dialog">
+      <h2 id="titulo-cancelacion">¿Vaciar el pedido?</h2>
+      <p>Se eliminarán todos los artículos del borrador.</p>
+      <button class="boton secundario" value="conservar" autofocus>Conservar pedido</button>
+      <button class="boton primario" value="vaciar">Vaciar pedido</button>
+    </form>
+  </dialog>
+
   <p role="status" aria-live="polite" id="estado" class="estado"></p>
 
-  <script src="interaccion.js"></script>
+  <script type="module" src="interaccion.js"></script>
 </body>
 </html>
