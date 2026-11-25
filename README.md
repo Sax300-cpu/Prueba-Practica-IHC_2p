@@ -46,7 +46,7 @@ Presentación → Aplicación → Dominio → Infraestructura. La presentación 
 - Las pruebas con usuarios se hicieron con **tres participantes**: las métricas son descriptivas y no se generalizan. El consolidado de métricas no adjunta las hojas individuales de observación.
 - El código de retiro es fijo (`#CU-104`), heredado de la v1; no hay servidor ni cuentas de usuario.
 - Falta un indicador visual de pasos del flujo (H-07) y el aviso verde queda ligeramente por debajo del contraste 4,5:1.
-- Archivos pedidos por el enunciado que aún no existen con ese nombre: `evaluacion/plan.md`, `evaluacion/piloto.md` y `evaluacion/resultados.csv` (el plan, el consentimiento y la hoja de observación están como `01_`, `02_` y `04_` en `evaluacion/`).
+- Las hojas de observación y los consentimientos individuales de P00–P02 no están en el repositorio; [`evaluacion/piloto.md`](evaluacion/piloto.md) detalla qué consta y qué no.
 
 ## Enlaces a evidencias
 | Criterio | Evidencia | Responsable |
@@ -55,9 +55,9 @@ Presentación → Aplicación → Dominio → Infraestructura. La presentación 
 | 2 Requisitos y AI | [Requisitos](docs/requisitos.md), [mapa y flujos](docs/arquitectura-informacion.md), [trazabilidad](docs/trazabilidad.md) | MG |
 | 3 Prototipado | [Wireframes](prototipos/wireframes/cafeu-wireframes.html) | MG |
 | 4 Implementación | [`src/`](src), [`tests/`](tests), [arquitectura](docs/arquitectura.md) | LM + MG |
-| 5 Planificación y pilotaje | [Plan](evaluacion/01_Plan_Evaluacion.md), [tareas](evaluacion/tareas.md), [consentimiento](evaluacion/02_Consentimiento_Informado.md), [hoja de observación](evaluacion/04_Hoja_Observacion_SUS.md) | AC |
+| 5 Planificación y pilotaje | [Plan](evaluacion/plan.md), [piloto](evaluacion/piloto.md), [tareas](evaluacion/tareas.md), [consentimiento](evaluacion/02_Consentimiento_Informado.md), [hoja de observación](evaluacion/04_Hoja_Observacion_SUS.md) | AC |
 | 6 Heurística y accesibilidad | [Heurísticas](evaluacion/heuristicas.md), [recorrido cognitivo](evaluacion/recorrido-cognitivo.md), [accesibilidad](evaluacion/accesibilidad.md) | AC |
-| 7 Pruebas con usuarios | [Métricas](evaluacion/metricas.md) | AC / KV |
-| 8 Hallazgos y validación | [Hallazgos](evaluacion/hallazgos.md), `evaluacion/backlog.md`, [validación v2](evaluacion/validacion-v2.md), [capturas antes/después](evidencias/README.md) | MG / LM / AC |
+| 7 Pruebas con usuarios | [Métricas](evaluacion/metricas.md), [resultados.csv](evaluacion/resultados.csv) | AC / KV |
+| 8 Hallazgos y validación | [Hallazgos](evaluacion/hallazgos.md), [backlog](evaluacion/backlog.md), [validación v2](evaluacion/validacion-v2.md), [capturas antes/después](evidencias/README.md) | MG / LM / AC |
 | 9 GitHub y colaboración | Este README, historial de commits y pull requests | todos |
 | Informe | [`informe/Informe_CafeU_2.0.pdf`](informe/Informe_CafeU_2.0.pdf) (fuentes LaTeX en `informe/`) | todos |
