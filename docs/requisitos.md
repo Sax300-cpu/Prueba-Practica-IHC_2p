@@ -7,7 +7,7 @@ El recorrido parte del [análisis UX](analisis-ux.md) y del [prototipo base](../
 | RF-01 | Consultar horario y catálogo con filtros por categoría. | Inicio muestra el horario y el menú permite ver todas las categorías, bebidas o comida. |
 | RF-02 | Buscar por nombre o descripción sin depender de tildes o mayúsculas. | `CAFE` encuentra Café americano en Todas. Un resultado vacío permite limpiar la búsqueda y restablecer el filtro. |
 | RF-03 | Agregar un producto y su cantidad desde el detalle. | Al agregar dos cafés, el menú informa el agregado y el encabezado muestra dos unidades. |
-| RF-04 | Modificar cantidades y consultar subtotales y total en USD. | Subir de uno a dos cafés de $1,50 muestra $3,00. La cantidad mínima de una línea es 1. |
+| RF-04 | Modificar cantidades y consultar subtotales y total en USD. | Subir de uno a dos cafés de $1.50 muestra $3.00. La cantidad mínima de una línea es 1. |
 | RF-05 | Quitar y recuperar una línea, y cancelar el borrador completo. | Deshacer repone la cantidad retirada. Cancelar solicita confirmación y conservar el pedido mantiene las líneas. |
 | RF-06 | Confirmar un pedido con artículos y mostrar su código, resumen y total. | Un carrito vacío explica cómo habilitar la acción. Tras confirmar aparece el código de retiro simulado y queda disponible al volver al menú. |
 

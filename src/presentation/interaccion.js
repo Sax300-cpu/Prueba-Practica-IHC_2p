@@ -188,7 +188,7 @@ function renderPedido() {
           `</div>` +
           `<div class="mini-selector">` +
             `<button type="button" data-id="${id}" data-op="-1" aria-label="Disminuir ${p.nombre}" ${cant === 1 ? "disabled" : ""}>−</button>` +
-            `<span aria-label="Cantidad: ${cant}">${cant}</span>` +
+            `<span><span class="sr-only">Cantidad: </span>${cant}</span>` +
             `<button type="button" data-id="${id}" data-op="1" aria-label="Aumentar ${p.nombre}">+</button>` +
           `</div>` +
           `<span class="subtotal">${fmt(p.precio * cant)}</span>` +
