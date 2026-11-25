@@ -69,6 +69,12 @@ function actualizarContador() {
   if (contador) {
     contador.textContent = estado.totalArticulos;
   }
+  const cantidad = estado.totalArticulos;
+  $('#btn-pedido')?.setAttribute('aria-label', `Mi pedido, ${cantidad} ${cantidad === 1 ? 'artículo' : 'artículos'}`);
+  const totalMenu = $('#total-menu');
+  if (totalMenu) totalMenu.textContent = `Total del pedido: ${fmt(estado.total)}`;
+  const btnUltimo = $('#btn-ultimo');
+  if (btnUltimo) btnUltimo.hidden = !(estado.ultimoConfirmado || ultimaConfirmacion);
 }
 
 // ---------- Render: catálogo ----------
@@ -345,9 +351,8 @@ function renderConfirmacion(confirmacion) {
 
   $('#btn-copiar-codigo')?.addEventListener('click', async () => {
     try {
-      if (navigator.clipboard?.writeText) {
-        await navigator.clipboard.writeText(codigoMostrado);
-      }
+      if (!navigator.clipboard?.writeText) throw new Error('Portapapeles no disponible');
+      await navigator.clipboard.writeText(codigoMostrado);
       mostrarAviso(`Código ${codigoMostrado} copiado al portapapeles.`);
     } catch {
       mostrarAviso(`Código de retiro: ${codigoMostrado}.`);

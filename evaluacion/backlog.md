@@ -18,8 +18,8 @@ Se cruzan los hallazgos de la evaluación heurística (`heuristicas.md`), accesi
 | **H-05** | El código de retiro (`#CU-104`) carece de acción de copiado rápido e instrucción destacada | H6 / H10 + Inspección | 2 | 2 | **4** | Agregar botón *Copiar código* con confirmación accesible (`role="status"`) en pantalla de confirmación | **Fix v2 #2** |
 | **H-04** | Motivo de bloqueo de *Confirmar pedido* en carrito vacío requiere cercanía visual y semántica | H5 (Prevención) + Usuarios (P2) + Accesibilidad (`RF-06`) | 2 | 2 | **4** | Botón `disabled` vinculado mediante `aria-describedby` al mensaje explicativo adyacente | Implementado |
 | **H-06** | Contador del carrito sin unidad textual explícita para lectores de pantalla | H2 + Inspección + Accesibilidad (`RNF-03`) | 1 | 2 | **2** | Etiqueta accesible `aria-label` con cantidad de artículos en el acceso a *Mi pedido* | Implementado |
-| **H-09** | Consulta del total acumulado sin abrir *Mi pedido* | Usuarios (P3) | 1 | 1 | **1** | Evaluar indicador resumido de total en encabezado en futuras iteraciones | Diferido |
-| **H-07** | Orientación de etapa dentro del flujo de compra | Inspección + Accesibilidad (`RNF-02`) | 1 | 1 | **1** | Títulos `<h1>` con traslado de foco automático al cambiar de vista | Implementado |
+| **H-09** | Consulta del total acumulado sin abrir *Mi pedido* | Usuarios (P3) | 1 | 1 | **1** | Mostrar «Total del pedido» en el menú (`#total-menu`), actualizado con cada cambio | Implementado |
+| **H-07** | Orientación de etapa dentro del flujo de compra | Inspección + Accesibilidad (`RNF-02`) | 1 | 1 | **1** | Títulos `<h1>` con traslado de foco al cambiar de vista. Un indicador visual de pasos sigue pendiente | Parcial |
 
 ## Resumen de correcciones v2 implementadas por Luis Miranda
 1. **Fix v2 #1 (`H-03` — Recuperación del último pedido confirmado):** `Pedido` y `PedidoLocalStorageRepository` persisten `ultimoConfirmado` tras confirmar; al volver al menú o recargar, el botón *Último pedido* (`#btn-ultimo`) muestra nuevamente el comprobante y código generado.
