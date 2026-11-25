@@ -1,124 +1,106 @@
-/* ============================================================
-   CaféU — Lógica de la app (SPA)
-   Vistas: Inicio · Menú · Detalle · Mi pedido · Confirmación
-   El pedido vive solo en memoria: recargar la página lo reinicia.
-   ============================================================ */
+import { CatalogoStaticRepository } from '../infrastructure/CatalogoStaticRepository.js';
+import { PedidoLocalStorageRepository } from '../infrastructure/PedidoLocalStorageRepository.js';
+import { BuscarProductosUseCase } from '../application/BuscarProductosUseCase.js';
+import { GestionarPedidoUseCase } from '../application/GestionarPedidoUseCase.js';
 
-// ---------- Catálogo (fuente de verdad) ----------
-const PRODUCTOS = [
-  { id: 'cafe-americano',  nombre: 'Café americano',     precio: 1.50, categoria: 'bebidas', desc: 'Café de grano molido · 12 oz',  emoji: '☕' },
-  { id: 'cappuccino',      nombre: 'Cappuccino',         precio: 2.00, categoria: 'bebidas', desc: 'Espresso, leche y espuma',       emoji: '☕' },
-  { id: 'te-manzanilla',   nombre: 'Té de manzanilla',   precio: 1.25, categoria: 'bebidas', desc: 'Infusión natural · 12 oz',       emoji: '🍵' },
-  { id: 'sanduche-queso',  nombre: 'Sanduche de queso',  precio: 2.75, categoria: 'comida',  desc: 'Pan, jamón y queso',             emoji: '🥪' },
-  { id: 'croissant',       nombre: 'Croissant',          precio: 1.75, categoria: 'comida',  desc: 'Hojaldre de mantequilla',        emoji: '🥐' },
-  { id: 'empanada',        nombre: 'Empanada',           precio: 1.50, categoria: 'comida',  desc: 'Relleno de pollo o carne',       emoji: '🥟' },
-];
+const CODIGO_PEDIDO_BASE = '#CU-104';
 
-const HORARIO = 'Lunes a viernes · 7:00 a 19:00';
-const CODIGO_PEDIDO = '#CU-104';
+// ---------- Casos de uso y persistencia ----------
+const catalogoRepo = new CatalogoStaticRepository();
+const pedidoRepo = new PedidoLocalStorageRepository({ clave: 'cafeu_2_pedido_v1' });
+const buscarUseCase = new BuscarProductosUseCase(catalogoRepo);
+const pedidoUseCase = new GestionarPedidoUseCase(pedidoRepo, catalogoRepo);
 
-// ---------- Estado ----------
-const pedido = new Map();   // id -> cantidad
+// ---------- Estado de UI ----------
 let categoriaActual = 'todas';
 let productoDetalle = null;
+let ultimaConfirmacion = null;
 let ultimoEliminado = null;
-const nombresCategoria = { todas: "Todas", bebidas: "Bebidas", comida: "Comida" };
+const nombresCategoria = { todas: 'Todas', bebidas: 'Bebidas', comida: 'Comida' };
 
 // ---------- Referencias DOM ----------
 const $ = (sel) => document.querySelector(sel);
 const vistas = {
-  inicio:       $('#vista-inicio'),
-  menu:         $('#vista-menu'),
-  detalle:      $('#vista-detalle'),
-  pedido:       $('#vista-pedido'),
+  inicio: $('#vista-inicio'),
+  menu: $('#vista-menu'),
+  detalle: $('#vista-detalle'),
+  pedido: $('#vista-pedido'),
   confirmacion: $('#vista-confirmacion'),
 };
 const contador = $('#contador');
 const catalogo = $('#catalogo');
 const buscador = $('#buscador');
-const estado = $('#estado');
+const estadoAviso = $('#estado');
 
 // ---------- Utilidades ----------
-const fmt = (n) => '$' + n.toFixed(2);
-
-// Normaliza texto para búsquedas: minúsculas y sin tildes.
-// Así «cafe» encuentra «Café americano» y «te» encuentra «Té de manzanilla».
-const normalizar = (texto) =>
-  texto
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLowerCase()
-    .trim();
+const fmt = (n) => '$' + Number(n || 0).toFixed(2);
 
 let avisoTimer = null;
 
-// Aviso flotante accesible (role="status"). Permanece 5 s y no se borra al cambiar de vista.
 function mostrarAviso(mensaje) {
-  estado.textContent = mensaje;
-  estado.classList.add('visible');
+  if (!estadoAviso) return;
+  estadoAviso.textContent = mensaje;
+  estadoAviso.classList.add('visible');
   if (avisoTimer) clearTimeout(avisoTimer);
   avisoTimer = setTimeout(() => {
-    estado.classList.remove('visible');
-    estado.textContent = '';
+    estadoAviso.classList.remove('visible');
+    estadoAviso.textContent = '';
   }, 5000);
-}
-
-function totalArticulos() {
-  let n = 0;
-  for (const c of pedido.values()) n += c;
-  return n;
-}
-
-function subtotal() {
-  let s = 0;
-  for (const [id, cant] of pedido) {
-    const p = PRODUCTOS.find((x) => x.id === id);
-    s += p.precio * cant;
-  }
-  return s;
 }
 
 function mostrarVista(nombre) {
   for (const key in vistas) {
-    const activa = key === nombre;
-    if (activa) { vistas[key].hidden = false; } else { vistas[key].hidden = true; }
+    if (vistas[key]) {
+      vistas[key].hidden = key !== nombre;
+    }
   }
-  const titulo = document.getElementById(vistas[nombre].getAttribute('aria-labelledby'));
-  titulo.tabIndex = -1;
-  titulo.focus({ preventScroll: true });
+  const vistaActiva = vistas[nombre];
+  const idTitulo = vistaActiva?.getAttribute('aria-labelledby');
+  const titulo = idTitulo ? document.getElementById(idTitulo) : null;
+  if (titulo) {
+    titulo.tabIndex = -1;
+    titulo.focus({ preventScroll: true });
+  }
   window.scrollTo(0, 0);
+}
+
+function actualizarContador() {
+  const estado = pedidoUseCase.obtenerEstado();
+  if (contador) {
+    contador.textContent = estado.totalArticulos;
+  }
 }
 
 // ---------- Render: catálogo ----------
 function renderCatalogo() {
-  const q = normalizar(buscador.value);
-  const lista = PRODUCTOS.filter((p) => {
-    const okCat = categoriaActual === 'todas' || p.categoria === categoriaActual;
-    const okBus = !q ||
-      normalizar(p.nombre).includes(q) ||
-      normalizar(p.desc).includes(q);
-    return okCat && okBus;
+  const lista = buscarUseCase.ejecutar({
+    termino: buscador ? buscador.value : '',
+    categoria: categoriaActual,
   });
+
+  const estadoPedido = pedidoUseCase.obtenerEstado();
+  const cantidadesPorId = new Map(estadoPedido.items.map((item) => [item.id, item.cantidad]));
 
   catalogo.innerHTML = '';
   if (lista.length === 0) {
     catalogo.innerHTML = `<li class="pedido-vacio">
-      <p>No hay coincidencias en «${nombresCategoria[categoriaActual]}».</p>
+      <p>No hay coincidencias en «${nombresCategoria[categoriaActual] || categoriaActual}».</p>
       <button type="button" class="boton secundario" id="limpiar-busqueda">Limpiar búsqueda y filtros</button>
     </li>`;
-    $('#limpiar-busqueda').addEventListener('click', () => {
-      buscador.value = '';
+    $('#limpiar-busqueda')?.addEventListener('click', () => {
+      if (buscador) buscador.value = '';
       seleccionarCategoria('todas');
-      buscador.focus();
+      buscador?.focus();
     });
     return;
   }
+
   for (const p of lista) {
     const li = document.createElement('li');
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.className = 'cat';
-    const cantidad = pedido.get(p.id) || 0;
+    const cantidad = cantidadesPorId.get(p.id) || 0;
     btn.innerHTML =
       `<span class="emoji" aria-hidden="true">${p.emoji}</span>` +
       `<span class="info">` +
@@ -136,7 +118,9 @@ function renderCatalogo() {
 
 // ---------- Render: detalle ----------
 function abrirDetalle(id) {
-  productoDetalle = PRODUCTOS.find((p) => p.id === id);
+  productoDetalle = catalogoRepo.obtenerPorId(id);
+  if (!productoDetalle) return;
+
   const cont = $('#detalle-contenido');
   cont.innerHTML =
     `<div class="emoji" aria-hidden="true">${productoDetalle.emoji}</div>` +
@@ -152,11 +136,20 @@ function abrirDetalle(id) {
 
   let cant = 1;
   const valor = $('#cant-valor');
-  $('#cant-mas').addEventListener('click', () => { cant++; valor.textContent = cant; });
-  $('#cant-menos').addEventListener('click', () => { cant = Math.max(1, cant - 1); valor.textContent = cant; });
+  $('#cant-mas').addEventListener('click', () => {
+    cant++;
+    valor.textContent = cant;
+  });
+  $('#cant-menos').addEventListener('click', () => {
+    cant = Math.max(1, cant - 1);
+    valor.textContent = cant;
+  });
   $('#btn-agregar').addEventListener('click', () => {
-    pedido.set(productoDetalle.id, (pedido.get(productoDetalle.id) || 0) + cant);
+    pedidoUseCase.agregarProducto(productoDetalle.id, cant);
+    ultimoEliminado = null;
     actualizarContador();
+    renderCatalogo();
+    renderPedido();
     mostrarVista('menu');
     mostrarAviso(`${productoDetalle.nombre} agregado al pedido.`);
   });
@@ -167,7 +160,10 @@ function abrirDetalle(id) {
 // ---------- Render: mi pedido ----------
 function renderPedido() {
   const cont = $('#pedido-contenido');
-  const vacio = pedido.size === 0;
+  if (!cont) return;
+
+  const estado = pedidoUseCase.obtenerEstado();
+  const vacio = estado.estaVacio;
   let html = '';
 
   if (vacio) {
@@ -178,28 +174,27 @@ function renderPedido() {
         `<button type="button" class="boton primario" id="btn-vacio-menu">Volver al menú</button>` +
       `</div>`;
   } else {
-    for (const [id, cant] of pedido) {
-      const p = PRODUCTOS.find((x) => x.id === id);
+    for (const item of estado.items) {
       html +=
         `<div class="linea-pedido">` +
           `<div class="info">` +
-            `<span class="nombre">${p.emoji} ${p.nombre}</span><br>` +
-            `<span class="precio-unit">${fmt(p.precio)} c/u</span>` +
+            `<span class="nombre">${item.emoji} ${item.nombre}</span><br>` +
+            `<span class="precio-unit">${fmt(item.precio)} c/u</span>` +
           `</div>` +
           `<div class="mini-selector">` +
-            `<button type="button" data-id="${id}" data-op="-1" aria-label="Disminuir ${p.nombre}" ${cant === 1 ? "disabled" : ""}>−</button>` +
-            `<span><span class="sr-only">Cantidad: </span>${cant}</span>` +
-            `<button type="button" data-id="${id}" data-op="1" aria-label="Aumentar ${p.nombre}">+</button>` +
+            `<button type="button" data-id="${item.id}" data-op="-1" aria-label="Disminuir ${item.nombre}">−</button>` +
+            `<span>${item.cantidad}</span>` +
+            `<button type="button" data-id="${item.id}" data-op="1" aria-label="Aumentar ${item.nombre}">+</button>` +
           `</div>` +
-          `<span class="subtotal">${fmt(p.precio * cant)}</span>` +
-          `<button type="button" class="quitar" data-id="${id}" aria-label="Quitar ${p.nombre} de mi pedido">` +
+          `<span class="subtotal">${fmt(item.subtotal)}</span>` +
+          `<button type="button" class="quitar" data-id="${item.id}" aria-label="Quitar ${item.nombre} de mi pedido">` +
             `<span aria-hidden="true">🗑</span> Quitar` +
           `</button>` +
         `</div>`;
     }
   }
 
-  if (ultimoEliminado) {
+  if (ultimoEliminado || estado.puedeRecuperar) {
     html += '<button type="button" class="boton secundario" id="btn-deshacer">Deshacer eliminación</button>';
   }
   if (!vacio) {
@@ -208,8 +203,8 @@ function renderPedido() {
 
   html +=
     `<dl class="resumen">` +
-      `<div class="fila"><dt>Artículos</dt><dd>${totalArticulos()}</dd></div>` +
-      `<div class="fila total"><dt>Total a pagar</dt><dd>${fmt(subtotal())}</dd></div>` +
+      `<div class="fila"><dt>Artículos</dt><dd>${estado.totalArticulos}</dd></div>` +
+      `<div class="fila total"><dt>Total a pagar</dt><dd>${fmt(estado.total)}</dd></div>` +
     `</dl>` +
     `<div class="acciones">` +
       `<button type="button" class="boton primario" id="btn-confirmar"` +
@@ -222,111 +217,136 @@ function renderPedido() {
     `</div>`;
 
   cont.innerHTML = html;
+
   $('#btn-deshacer')?.addEventListener('click', () => {
-    const { id, cantidad } = ultimoEliminado;
-    pedido.set(id, (pedido.get(id) || 0) + cantidad);
+    const previa = ultimoEliminado;
+    const { estado: nuevoEstado } = pedidoUseCase.recuperarUltimoEliminado();
     ultimoEliminado = null;
     actualizarContador();
+    renderCatalogo();
     renderPedido();
-    enfocarLinea(id);
-    mostrarAviso('Producto recuperado.');
+    if (previa?.id) {
+      enfocarLinea(previa.id);
+    }
+    const itemRestaurado = previa?.id
+      ? nuevoEstado.items.find((x) => x.id === previa.id)
+      : null;
+    mostrarAviso(
+      itemRestaurado
+        ? `Producto recuperado (${itemRestaurado.cantidad}). Total: ${fmt(nuevoEstado.total)}.`
+        : 'Producto recuperado.'
+    );
   });
+
   $('#btn-cancelar')?.addEventListener('click', abrirCancelacion);
 
   if (vacio) {
-    $('#btn-vacio-menu').addEventListener('click', () => mostrarVista('menu'));
+    $('#btn-vacio-menu')?.addEventListener('click', () => mostrarVista('menu'));
   } else {
-    // Eventos de cantidad / quitar
     cont.querySelectorAll('.mini-selector button').forEach((b) => {
       b.addEventListener('click', () => {
         const id = b.dataset.id;
         const delta = parseInt(b.dataset.op, 10);
-        const nueva = (pedido.get(id) || 0) + delta;
-        pedido.set(id, nueva);
+        const { estado: nuevoEstado } = pedidoUseCase.ajustarCantidad(id, delta);
+        const itemActual = nuevoEstado.items.find((x) => x.id === id);
         actualizarContador();
+        renderCatalogo();
         renderPedido();
-        enfocarLinea(id, delta);
-        mostrarAviso(`Cantidad: ${nueva}. Total: ${fmt(subtotal())}.`);
+        if (itemActual) {
+          enfocarLinea(id, delta);
+          mostrarAviso(`Cantidad: ${itemActual.cantidad}. Total: ${fmt(nuevoEstado.total)}.`);
+        } else {
+          mostrarAviso(`Producto quitado. Total: ${fmt(nuevoEstado.total)}.`);
+        }
       });
     });
+
     cont.querySelectorAll('.quitar').forEach((b) => {
       b.addEventListener('click', () => {
         const id = b.dataset.id;
-        ultimoEliminado = { id, cantidad: pedido.get(id) };
-        pedido.delete(id);
+        const estadoActual = pedidoUseCase.obtenerEstado();
+        const itemPrevio = estadoActual.items.find((x) => x.id === id);
+        if (itemPrevio) {
+          ultimoEliminado = { id: itemPrevio.id, cantidad: itemPrevio.cantidad };
+        }
+        const { eliminado, estado: nuevoEstado } = pedidoUseCase.eliminarProducto(id);
         actualizarContador();
+        renderCatalogo();
         renderPedido();
-        $('#btn-deshacer').focus();
-        mostrarAviso('Producto retirado. Puedes deshacer la eliminación.');
+        if (eliminado) {
+          mostrarAviso(`${eliminado} quitado. Total: ${fmt(nuevoEstado.total)}.`);
+        }
       });
     });
-    $('#btn-confirmar').addEventListener('click', confirmarPedido);
+
+    $('#btn-confirmar')?.addEventListener('click', confirmarPedido);
   }
 
-  $('#btn-seguir').addEventListener('click', () => mostrarVista('menu'));
+  $('#btn-seguir')?.addEventListener('click', () => mostrarVista('menu'));
 }
 
 function enfocarLinea(id, operacion = 1) {
   const boton = document.querySelector(`[data-id="${id}"][data-op="${operacion}"]:enabled`);
-  (boton || document.querySelector(`[data-id="${id}"][data-op="1"]`)).focus();
+  (boton || document.querySelector(`[data-id="${id}"][data-op="1"]`))?.focus();
 }
 
 function abrirCancelacion() {
   const dialogo = $('#cancelacion');
-  dialogo.showModal();
+  dialogo?.showModal?.();
 }
 
-$('#cancelacion form').addEventListener('submit', (evento) => {
+$('#cancelacion form')?.addEventListener('submit', (evento) => {
   evento.preventDefault();
-  $('#cancelacion').close();
+  $('#cancelacion')?.close?.();
   if (evento.submitter?.value !== 'vaciar') return;
-  pedido.clear();
+
+  const estadoActual = pedidoUseCase.obtenerEstado();
+  for (const item of estadoActual.items) {
+    pedidoUseCase.eliminarProducto(item.id);
+  }
   ultimoEliminado = null;
   actualizarContador();
+  renderCatalogo();
   renderPedido();
-  $('#btn-vacio-menu').focus();
+  $('#btn-vacio-menu')?.focus();
   mostrarAviso('Pedido cancelado.');
 });
 
 function confirmarPedido() {
-  // Defensa adicional: nunca confirmar un pedido vacío, aunque se invoque por código.
-  if (pedido.size === 0) {
+  const estadoPrevio = pedidoUseCase.obtenerEstado();
+  if (estadoPrevio.estaVacio) {
     mostrarAviso('Agrega al menos un producto antes de confirmar tu pedido.');
     return;
   }
 
+  const { confirmacion } = pedidoUseCase.confirmarPedido();
+  ultimaConfirmacion = confirmacion;
+  ultimoEliminado = null;
+  actualizarContador();
+  renderCatalogo();
+  renderPedido();
+
   const cont = $('#confirmacion-contenido');
-  let items = '';
-  for (const [id, cant] of pedido) {
-    const p = PRODUCTOS.find((x) => x.id === id);
-    items += `<div class="fila"><dt>${cant} × ${p.nombre}</dt><dd>${fmt(p.precio * cant)}</dd></div>`;
-  }
-  const total = subtotal();
+  const itemsHtml = confirmacion.items
+    .map((item) => `<div class="fila"><dt>${item.cantidad} × ${item.nombre}</dt><dd>${fmt(item.subtotal)}</dd></div>`)
+    .join('');
+
   cont.innerHTML =
     `<div class="check" aria-hidden="true">✅</div>` +
-    `<h1 id="titulo-confirmacion">Pedido confirmado</h1>` +
-    `<p>En esta simulación, presenta el código en caja para retirar tu pedido.</p>` +
-    `<p class="codigo">${CODIGO_PEDIDO}</p>` +
-    `<dl class="resumen detalle-pedido">${items}` +
-      `<div class="fila total"><dt>Total</dt><dd>${fmt(total)}</dd></div>` +
+    `<h2>¡Pedido recibido!</h2>` +
+    `<p>Ya está en camino a la cocina de la cafetería.</p>` +
+    `<p class="codigo">${confirmacion.codigo || CODIGO_PEDIDO_BASE}</p>` +
+    `<dl class="resumen detalle-pedido">${itemsHtml}` +
+      `<div class="fila total"><dt>Total</dt><dd>${fmt(confirmacion.total)}</dd></div>` +
     `</dl>` +
     `<button type="button" class="boton primario" id="btn-finalizar">Volver al menú</button>`;
 
-  pedido.clear();
-  ultimoEliminado = null;
-  actualizarContador();
-  $('#btn-ultimo').hidden = false;
-  $('#btn-finalizar').addEventListener('click', () => mostrarVista('menu'));
-  mostrarVista('confirmacion');
-}
+  $('#btn-finalizar').addEventListener('click', () => {
+    ultimaConfirmacion = null;
+    mostrarVista('menu');
+  });
 
-// ---------- Contador ----------
-function actualizarContador() {
-  const cantidad = totalArticulos();
-  contador.textContent = cantidad;
-  $('#btn-pedido').setAttribute('aria-label', `Mi pedido, ${cantidad} ${cantidad === 1 ? 'artículo' : 'artículos'}`);
-  $('#total-menu').textContent = `Total del pedido: ${fmt(subtotal())}`;
-  renderCatalogo();
+  mostrarVista('confirmacion');
 }
 
 // ---------- Filtros y búsqueda ----------
@@ -341,23 +361,37 @@ function seleccionarCategoria(categoria) {
 }
 
 function initFiltros() {
-  document.querySelectorAll('.filtro').forEach((filtro) => {
-    filtro.addEventListener('click', () => seleccionarCategoria(filtro.dataset.cat));
+  document.querySelectorAll('.filtro').forEach((f) => {
+    f.addEventListener('click', () => {
+      seleccionarCategoria(f.dataset.cat);
+    });
   });
-  seleccionarCategoria(categoriaActual);
-  buscador.addEventListener('input', renderCatalogo);
+  if (buscador) {
+    buscador.addEventListener('input', renderCatalogo);
+  }
 }
 
 // ---------- Navegación ----------
 function initNavegacion() {
-  $('#btn-ultimo').addEventListener('click', () => mostrarVista('confirmacion'));
-  $('#btn-inicio').addEventListener('click', () => mostrarVista('inicio'));
-  $('#btn-ver-menu').addEventListener('click', () => { mostrarVista('menu'); renderCatalogo(); });
-  $('#btn-volver-menu').addEventListener('click', () => { mostrarVista('menu'); renderCatalogo(); });
-  $('#btn-pedido').addEventListener('click', () => { renderPedido(); mostrarVista('pedido'); });
+  $('#btn-ultimo')?.addEventListener('click', () => mostrarVista('confirmacion'));
+  $('#btn-inicio')?.addEventListener('click', () => mostrarVista('inicio'));
+  $('#btn-ver-menu')?.addEventListener('click', () => {
+    mostrarVista('menu');
+    renderCatalogo();
+  });
+  $('#btn-volver-menu')?.addEventListener('click', () => {
+    mostrarVista('menu');
+    renderCatalogo();
+  });
+  $('#btn-pedido')?.addEventListener('click', () => {
+    renderPedido();
+    mostrarVista('pedido');
+  });
 }
 
 // ---------- Arranque ----------
 initFiltros();
 initNavegacion();
+renderCatalogo();
+renderPedido();
 actualizarContador();
