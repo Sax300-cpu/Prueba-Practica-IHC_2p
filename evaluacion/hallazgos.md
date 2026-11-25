@@ -22,4 +22,12 @@ La [matriz consolidada de APE6](https://github.com/Sax300-cpu/HCI-2026-G2/blob/m
 | P01 | Kevin Velasco | Manolo García | Pendiente de evidencia |
 | P02 | Luis Miranda | Manolo García | Pendiente de evidencia |
 
-Tras las sesiones, registrar por tarea la versión, el resultado, la observación y el ID del hallazgo relacionado. La equivalencia de P1–P3 con P00–P02 requiere confirmación del equipo según el [plan](../docs/plan-equipo.md).
+Completar una [hoja de observación](04_Hoja_Observacion_SUS.md) por sesión con el código del participante y las consignas que se usaron. El [plan del equipo](../docs/plan-equipo.md) define P00 como piloto. Si el equipo confirma la reutilización de P1–P3, registrar la correspondencia con P00–P02 y la versión que se evaluó.
+
+### Registro para contrastar las sesiones con la inspección
+
+| Sesión y tarea | Versión o commit | Resultado y tiempo | Acción o frase observada | Hallazgo y relación con la inspección |
+|---|---|---|---|---|
+| _Completar con cada observación registrada_ | | | | |
+
+Para cada hallazgo, indicar si la inspección y la sesión coinciden, si la sesión descubre un problema nuevo o si la tarea ejecutada deja el hallazgo sin comprobar. Si una tarea termina con ayuda, conservar ese dato al describir el resultado. Para P00, registrar además los cambios de consigna o del protocolo antes de P01 y P02. Usar códigos de participante en las notas que se publiquen.
