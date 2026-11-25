@@ -6,6 +6,7 @@ export class PedidoLocalStorageRepository {
   constructor({ storage = null, clave = CLAVE_DEFAULT } = {}) {
     this.clave = clave;
     this.memoriaFallback = null;
+    this.storageDisponible = true;
 
     if (storage) {
       this.storage = storage;
@@ -13,43 +14,51 @@ export class PedidoLocalStorageRepository {
       this.storage = globalThis.localStorage;
     } else {
       this.storage = null;
+      this.storageDisponible = false;
     }
   }
 
   cargar() {
     try {
-      if (this.storage) {
+      if (this.storage && this.storageDisponible) {
         const raw = this.storage.getItem(this.clave);
-        if (!raw) return new Pedido();
-        return Pedido.fromJSON(JSON.parse(raw));
+        if (raw !== null && raw !== undefined) {
+          return Pedido.fromJSON(JSON.parse(raw));
+        }
       }
-      return this.memoriaFallback ? Pedido.fromJSON(this.memoriaFallback) : new Pedido();
     } catch {
-      return new Pedido();
+      this.storageDisponible = false;
     }
+
+    if (this.memoriaFallback) {
+      return Pedido.fromJSON(this.memoriaFallback);
+    }
+    return new Pedido();
   }
 
   guardar(pedido) {
     const serializado = pedido.toJSON();
-    try {
-      if (this.storage) {
-        this.storage.setItem(this.clave, JSON.stringify(serializado));
-        return;
-      }
-    } catch {
-      // Si localStorage no está disponible o falla, se conserva el respaldo en memoria
-    }
     this.memoriaFallback = serializado;
+
+    if (!this.storage || !this.storageDisponible) {
+      return;
+    }
+
+    try {
+      this.storage.setItem(this.clave, JSON.stringify(serializado));
+    } catch {
+      this.storageDisponible = false;
+    }
   }
 
   limpiar() {
     this.memoriaFallback = null;
+    if (!this.storage) return;
+
     try {
-      if (this.storage) {
-        this.storage.removeItem(this.clave);
-      }
+      this.storage.removeItem(this.clave);
     } catch {
-      // Ignorar errores de acceso a storage
+      this.storageDisponible = false;
     }
   }
 }
