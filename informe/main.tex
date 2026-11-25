@@ -1,0 +1,172 @@
+\documentclass{article}
+
+% Language setting
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\graphicspath{{imagenes/}}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage[letterpaper,top=2cm,bottom=5cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+% Useful packages
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{fancyhdr}
+\usepackage{multicol}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{longtable}
+\usepackage{array}
+\pagestyle{fancy}
+
+\fancyhf{}
+\setlength{\headheight}{70pt}
+
+% Marcador de sección pendiente: se muestra en rojo hasta que su responsable
+% borre esta línea y escriba su contenido.
+\newcommand{\pendiente}[2]{\textcolor{red}{\textit{[Pendiente --- #1: #2]}}}
+
+% Definición del encabezado
+\fancyhead[C]{%
+    \begin{minipage}[c]{1.5cm}
+        \includegraphics[width=1.5cm]{imagenes/uta.png}
+    \end{minipage}%
+    \hfill
+    \begin{minipage}[c]{10cm}
+        \centering
+        \small {\textbf{UNIVERSIDAD TÉCNICA DE AMBATO}} \\[0.1cm]
+        \scriptsize \textit{FACULTAD DE INGENIERÍA EN SISTEMAS ELECTRÓNICA E INDUSTRIAL} \\[0.1cm]
+        \scriptsize \textbf{CARRERA SOFTWARE} \\[0.1cm]
+        \scriptsize \textbf{CICLO ACADÉMICO: JULIO - DICIEMBRE 2026}
+        \vspace{0.2cm}
+    \end{minipage}%
+    \hfill
+    \begin{minipage}[c]{1.5cm}
+        \centering
+        \includegraphics[width=1.5cm]{imagenes/fisei.png}
+    \end{minipage}%
+}
+
+\begin{document}
+\begin{center}
+    {\large \textbf{INFORME DE GUÍA PRÁCTICA}} \\
+\end{center}
+
+\section{Portada}
+\begin{flushleft}
+\begin{tabular}{ l p{8cm} }
+    \textbf{Tema:} & Prueba práctica integradora: CaféU 2.0 \\
+    \textbf{Unidad de Organización Curricular:} & Profesional \\
+    \textbf{Nivel y Paralelo:} &  5 - A \\
+    \textbf{Alumnos participante(s):} &
+        Miranda Tarupi Luis Sebastian \newline
+        Velasco Huayamave Kevin Andres \newline
+        Cholota Bastidas Ariel Isai \newline
+        Garcia Amores Manolo Jose \\
+    \textbf{Asignatura:} & Interacción Humano-Computador \\
+    \textbf{Docente:} & Caiza Caizabuano Jose Ruben \\
+\end{tabular}
+\end{flushleft}
+
+\section{Informe de guía práctica}
+\subsection{Objetivos}
+\subsubsection{General}
+Diseñar, implementar, evaluar y validar una aplicación web interactiva para la cafetería universitaria CaféU 2.0, integrando experiencia de usuario, arquitectura de información, prototipado, accesibilidad, ingeniería de software y métodos de evaluación de usabilidad.
+
+\subsubsection{Específicos}
+\begin{itemize}
+    \item Analizar a la persona usuaria y su recorrido, relacionando los problemas detectados con los principios de Nielsen y Gestalt.
+    \item Definir requisitos, sitemap, user flow y wireframes, y mantener su trazabilidad con las pantallas y las pruebas.
+    \item Implementar catálogo, búsqueda tolerante a tildes y mayúsculas, carrito, cantidades, eliminación y confirmación, separando presentación, aplicación, dominio e infraestructura.
+    \item Planificar y ejecutar la evaluación de usabilidad (heurística, recorrido cognitivo, accesibilidad y pruebas con usuarios).
+    \item Triangular los resultados, priorizar el backlog, corregir al menos dos problemas y validar la versión v2.
+\end{itemize}
+
+\subsection{Modalidad}
+Presencial
+
+\subsection{Tiempo de duración}
+Presenciales: 2 (120 minutos sugeridos)\\
+No presenciales: 0
+
+\subsection{Instrucciones}
+Trabajo colaborativo en equipos de cuatro integrantes. Cada actividad debe entregar su evidencia en el repositorio de GitHub \url{https://github.com/Sax300-cpu/Prueba-Practica-IHC_2p}, con commits y revisiones verificables de cada integrante. No se aceptan resultados simulados o inventados como pruebas con usuarios; las métricas de muestras pequeñas son descriptivas y no se generalizan estadísticamente.
+
+\subsection{Listado de equipos, materiales y recursos}
+\textbf{Listado de equipos y materiales generales empleados en la guía práctica:}
+\begin{itemize}
+    \item Computadora
+    \item Visual Studio Code
+    \item Navegador web
+    \item Git y GitHub
+\end{itemize}
+
+\textbf{TAC (Tecnologías para el Aprendizaje y Conocimiento) empleados en la guía práctica:}
+\begin{itemize}
+    \item[$\square$] Plataformas educativas
+    \item[$\square$] Simuladores y laboratorios virtuales
+    \item[$\square$] Aplicaciones educativas
+    \item[$\square$] Recursos audiovisuales
+    \item[$\square$] Gamificación
+    \item[$\blacksquare$] Inteligencia Artificial
+    \item Otros (Especifique): \underline{\hspace{5cm}}
+\end{itemize}
+
+\subsection{Actividades por desarrollar}
+Desarrollar la prueba práctica integradora de CaféU 2.0 siguiendo las siete actividades indicadas: análisis de usuario y experiencia; requisitos y arquitectura de información; arquitectura de software e implementación; planificación de la evaluación; evaluación heurística y recorrido cognitivo; pilotaje y pruebas con usuarios; y triangulación, corrección y validación.
+
+\subsection{Resultados obtenidos}
+% Cada integrante edita SOLO su carpeta: secciones/<iniciales>/resultados.tex
+\subsubsection{Actividad 1 y métricas --- Kevin Velasco}
+\input{secciones/kv/resultados}
+
+\subsubsection{Requisitos, arquitectura de información y presentación --- Manolo García}
+\input{secciones/mg/resultados}
+
+\subsubsection{Arquitectura de software, pruebas y correcciones --- Luis Miranda}
+\input{secciones/lm/resultados}
+
+\subsubsection{Evaluación, heurística y validación --- Ariel Cholota}
+\input{secciones/ac/resultados}
+
+\subsection{Habilidades blandas empleadas en la práctica}
+\begin{itemize}
+    \item[$\square$] Liderazgo
+    \item[$\blacksquare$] Trabajo en equipo
+    \item[$\square$] Comunicación asertiva
+    \item[$\square$] La empatía
+    \item[$\blacksquare$] Pensamiento crítico
+    \item[$\square$] Flexibilidad
+    \item[$\square$] La resolución de conflictos
+    \item[$\square$] Adaptabilidad
+    \item[$\blacksquare$] Responsabilidad
+\end{itemize}
+
+\subsection{Conclusiones}
+\textbf{Kevin Velasco.} \input{secciones/kv/conclusiones}
+
+\textbf{Manolo García.} \input{secciones/mg/conclusiones}
+
+\textbf{Luis Miranda.} \input{secciones/lm/conclusiones}
+
+\textbf{Ariel Cholota.} \input{secciones/ac/conclusiones}
+
+\subsection{Recomendaciones}
+\textbf{Kevin Velasco.} \input{secciones/kv/recomendaciones}
+
+\textbf{Manolo García.} \input{secciones/mg/recomendaciones}
+
+\textbf{Luis Miranda.} \input{secciones/lm/recomendaciones}
+
+\textbf{Ariel Cholota.} \input{secciones/ac/recomendaciones}
+
+\subsection{Referencias}
+
+\vspace{-3em}
+\renewcommand{\refname}{}
+\nocite{*}
+\bibliographystyle{ieeetr}
+\bibliography{referencias}
+
+\end{document}

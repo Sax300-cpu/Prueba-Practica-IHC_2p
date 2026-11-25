@@ -1,0 +1,13 @@
+% Sección de Luis Miranda. Fuente: docs/arquitectura.md, src/, tests/ y evaluacion/backlog.md
+\paragraph{Arquitectura en cuatro capas.} La aplicación separa las responsabilidades así (detalle en \path{docs/arquitectura.md}):
+\begin{itemize}
+    \item \textbf{Presentación} (\path{src/presentation/}): vistas Inicio, Menú, Detalle, Mi pedido y Confirmación, estilos Mobile First, controles accesibles y manejo de eventos.
+    \item \textbf{Aplicación} (\path{src/application/}): casos de uso \texttt{BuscarProductosUseCase} y \texttt{GestionarPedidoUseCase}, que orquestan las acciones del usuario.
+    \item \textbf{Dominio} (\path{src/domain/}): entidades \texttt{Producto}, \texttt{DetallePedido} y \texttt{Pedido}, y \texttt{NormalizadorTexto}, con las reglas de negocio (subtotales, totales, recuperación del último eliminado y confirmación).
+    \item \textbf{Infraestructura} (\path{src/infrastructure/}): \texttt{CatalogoStaticRepository} y \texttt{PedidoLocalStorageRepository}, respaldado en \texttt{localStorage} con caída segura a memoria cuando la escritura falla.
+\end{itemize}
+La presentación depende de la aplicación, la aplicación depende del dominio y la infraestructura implementa el acceso a datos apoyándose en el dominio, de modo que las reglas de negocio no conocen la interfaz ni el almacenamiento.
+
+\paragraph{Pruebas automatizadas.} Se implementaron cinco pruebas con el ejecutor nativo de Node (\texttt{npm test}): búsqueda tolerante a tildes y mayúsculas; agregar productos, actualizar cantidades y calcular totales; eliminar, recuperar el último eliminado y confirmar el pedido; persistencia y restauración en una nueva instancia; y recuperación en memoria cuando \texttt{setItem()} falla. Las cinco pasan en la ejecución local.
+
+\paragraph{Backlog y correcciones v2.} El backlog (\path{evaluacion/backlog.md}) prioriza los hallazgos H-01 a H-09 con el puntaje severidad $\times$ impacto (máximo 12): H-01 y H-02 obtienen 9, H-08 obtiene 6, y H-03, H-04 y H-05 obtienen 4. Las correcciones v2 aportadas por esta parte son H-03 (el botón «Último pedido» recupera el comprobante y el código tras volver al menú o recargar) y H-05 (el botón «Copiar código» con aviso accesible), que se suman a las de H-01, H-02 y H-08 ya implementadas en la presentación. La evidencia visual antes y después está en la sección de validación y en \path{evidencias/}.
